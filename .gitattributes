@@ -1,0 +1,3 @@
+junban-report/** linguist-generated
+src/ui/page.html linguist-detectable=false
+bench/*.json linguist-generated

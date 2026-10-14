@@ -13,6 +13,17 @@ jobs:
       - run: npm test
       - run: npx playwright install --with-deps chromium
       # End to end: Junban must find the race in the cart test and nothing in the bug-free one.
-      - run: npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "cart shows the total in rupees"
-      - run: npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "ok page: cart total (no bug)"
-      - run: node -e "const r=require('./junban-report/report.json');const v=Object.fromEntries(r.map(x=>[x.test,x.verdict]));if(v['cart shows the total in rupees']!=='race-found'||v['ok page: cart total (no bug)']!=='no-race-found'){console.error(v);process.exit(1)}"
+      - name: Hunt the demo races
+        run: |
+          npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "cart shows the total in rupees"
+          npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "ok page: cart total (no bug)"
+      - name: Check verdicts
+        run: |
+          node -e '
+            const r = require("./junban-report/report.json");
+            const v = Object.fromEntries(r.map((x) => [x.test, x.verdict]));
+            if (v["cart shows the total in rupees"] !== "race-found" || v["ok page: cart total (no bug)"] !== "no-race-found") {
+              console.error(v);
+              process.exit(1);
+            }
+          '

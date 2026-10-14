@@ -1,0 +1,547 @@
+[
+  {
+    "test": "cart shows the total in rupees",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/cart#1",
+        "GET /api/user#1"
+      ]
+    ],
+    "explored": 1,
+    "totalRuns": 9,
+    "ms": 17091,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "cart shows the total in rupees",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/user#1",
+        "GET /api/cart#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/user#1",
+          "url": "http://localhost:4310/api/user",
+          "sentAt": 46,
+          "arrivedAt": 232,
+          "releasedAt": 232
+        },
+        {
+          "key": "GET /api/cart#1",
+          "url": "http://localhost:4310/api/cart",
+          "sentAt": 47,
+          "arrivedAt": 334,
+          "releasedAt": 334
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "cart shows the total in rupees",
+      "schedule": [
+        "GET /api/cart#1",
+        "GET /api/user#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  locator('#total')\nExpected: \"3 items, ₹1299\"\nReceived: \"3 items, $1299\"\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/cart#1",
+        "GET /api/user#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/user#1",
+          "url": "http://localhost:4310/api/user",
+          "sentAt": 118,
+          "arrivedAt": 402,
+          "releasedAt": 643
+        },
+        {
+          "key": "GET /api/cart#1",
+          "url": "http://localhost:4310/api/cart",
+          "sentAt": 118,
+          "arrivedAt": 485,
+          "releasedAt": 485
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/cart#1",
+      "GET /api/user#1"
+    ],
+    "runsToFailure": 4,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "search shows results for the full query",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/search?q=ab#1",
+        "GET /api/search?q=a#1"
+      ]
+    ],
+    "explored": 1,
+    "totalRuns": 9,
+    "ms": 19825,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "search shows results for the full query",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/search?q=a#1",
+        "GET /api/search?q=ab#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/search?q=a#1",
+          "url": "http://localhost:4310/api/search?q=a",
+          "sentAt": 133,
+          "arrivedAt": 213,
+          "releasedAt": 214
+        },
+        {
+          "key": "GET /api/search?q=ab#1",
+          "url": "http://localhost:4310/api/search?q=ab",
+          "sentAt": 141,
+          "arrivedAt": 287,
+          "releasedAt": 287
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "search shows results for the full query",
+      "schedule": [
+        "GET /api/search?q=ab#1",
+        "GET /api/search?q=a#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  locator('#results li').first()\nExpected: \"ab shoes\"\nReceived: \"a shoes\"\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/search?q=ab#1",
+        "GET /api/search?q=a#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/search?q=a#1",
+          "url": "http://localhost:4310/api/search?q=a",
+          "sentAt": 437,
+          "arrivedAt": 541,
+          "releasedAt": 679
+        },
+        {
+          "key": "GET /api/search?q=ab#1",
+          "url": "http://localhost:4310/api/search?q=ab",
+          "sentAt": 447,
+          "arrivedAt": 636,
+          "releasedAt": 636
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/search?q=ab#1",
+      "GET /api/search?q=a#1"
+    ],
+    "runsToFailure": 4,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "products show the sale badge",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/products#1",
+        "GET /api/flags#1"
+      ]
+    ],
+    "explored": 1,
+    "totalRuns": 9,
+    "ms": 16595,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "products show the sale badge",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/flags#1",
+        "GET /api/products#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/flags#1",
+          "url": "http://localhost:4310/api/flags",
+          "sentAt": 93,
+          "arrivedAt": 172,
+          "releasedAt": 173
+        },
+        {
+          "key": "GET /api/products#1",
+          "url": "http://localhost:4310/api/products",
+          "sentAt": 94,
+          "arrivedAt": 365,
+          "releasedAt": 365
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "products show the sale badge",
+      "schedule": [
+        "GET /api/products#1",
+        "GET /api/flags#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('.sale')\nExpected: 3\nReceived: 0\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/products#1",
+        "GET /api/flags#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/flags#1",
+          "url": "http://localhost:4310/api/flags",
+          "sentAt": 112,
+          "arrivedAt": 174,
+          "releasedAt": 310
+        },
+        {
+          "key": "GET /api/products#1",
+          "url": "http://localhost:4310/api/products",
+          "sentAt": 112,
+          "arrivedAt": 265,
+          "releasedAt": 265
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/products#1",
+      "GET /api/flags#1"
+    ],
+    "runsToFailure": 4,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "price shows the live price",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/price/live#1",
+        "GET /api/price#1"
+      ]
+    ],
+    "explored": 1,
+    "totalRuns": 9,
+    "ms": 20021,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "price shows the live price",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/price#1",
+        "GET /api/price/live#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/price#1",
+          "url": "http://localhost:4310/api/price",
+          "sentAt": 148,
+          "arrivedAt": 316,
+          "releasedAt": 317
+        },
+        {
+          "key": "GET /api/price/live#1",
+          "url": "http://localhost:4310/api/price/live",
+          "sentAt": 148,
+          "arrivedAt": 438,
+          "releasedAt": 438
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "price shows the live price",
+      "schedule": [
+        "GET /api/price/live#1",
+        "GET /api/price#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  locator('#price')\nExpected: \"₹549 (live)\"\nReceived: \"₹499\"\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/price/live#1",
+        "GET /api/price#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/price#1",
+          "url": "http://localhost:4310/api/price",
+          "sentAt": 64,
+          "arrivedAt": 149,
+          "releasedAt": 534
+        },
+        {
+          "key": "GET /api/price/live#1",
+          "url": "http://localhost:4310/api/price/live",
+          "sentAt": 64,
+          "arrivedAt": 489,
+          "releasedAt": 490
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/price/live#1",
+      "GET /api/price#1"
+    ],
+    "runsToFailure": 4,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "orders greet the signed-in user",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/orders#1",
+        "GET /api/profile#1"
+      ]
+    ],
+    "explored": 3,
+    "totalRuns": 15,
+    "ms": 24580,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "orders greet the signed-in user",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/profile#1",
+        "GET /api/session#1",
+        "GET /api/orders#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/session#1",
+          "url": "http://localhost:4310/api/session",
+          "sentAt": 53,
+          "arrivedAt": 109,
+          "releasedAt": 109
+        },
+        {
+          "key": "GET /api/profile#1",
+          "url": "http://localhost:4310/api/profile",
+          "sentAt": 56,
+          "arrivedAt": 79,
+          "releasedAt": 79
+        },
+        {
+          "key": "GET /api/orders#1",
+          "url": "http://localhost:4310/api/orders",
+          "sentAt": 56,
+          "arrivedAt": 250,
+          "releasedAt": 250
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "orders greet the signed-in user",
+      "schedule": [
+        "GET /api/session#1",
+        "GET /api/orders#1",
+        "GET /api/profile#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  locator('#greeting')\nExpected: \"Hi Nancy, 3 orders\"\nReceived: \"Hi guest, 3 orders\"\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/session#1",
+        "GET /api/orders#1",
+        "GET /api/profile#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/session#1",
+          "url": "http://localhost:4310/api/session",
+          "sentAt": 89,
+          "arrivedAt": 143,
+          "releasedAt": 143
+        },
+        {
+          "key": "GET /api/profile#1",
+          "url": "http://localhost:4310/api/profile",
+          "sentAt": 89,
+          "arrivedAt": 154,
+          "releasedAt": 472
+        },
+        {
+          "key": "GET /api/orders#1",
+          "url": "http://localhost:4310/api/orders",
+          "sentAt": 89,
+          "arrivedAt": 428,
+          "releasedAt": 428
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/session#1",
+      "GET /api/orders#1",
+      "GET /api/profile#1"
+    ],
+    "runsToFailure": 5,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "recommendations use the dark theme",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [
+      [
+        "GET /api/recs#1",
+        "GET /api/theme#1"
+      ]
+    ],
+    "explored": 3,
+    "totalRuns": 15,
+    "ms": 25092,
+    "verdict": "race-found",
+    "baseline": {
+      "index": 0,
+      "title": "recommendations use the dark theme",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/theme#1",
+        "GET /api/session#1",
+        "GET /api/recs#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/theme#1",
+          "url": "http://localhost:4310/api/theme",
+          "sentAt": 54,
+          "arrivedAt": 151,
+          "releasedAt": 151
+        },
+        {
+          "key": "GET /api/session#1",
+          "url": "http://localhost:4310/api/session",
+          "sentAt": 54,
+          "arrivedAt": 218,
+          "releasedAt": 218
+        },
+        {
+          "key": "GET /api/recs#1",
+          "url": "http://localhost:4310/api/recs",
+          "sentAt": 226,
+          "arrivedAt": 358,
+          "releasedAt": 358
+        }
+      ]
+    },
+    "failing": {
+      "index": 0,
+      "title": "recommendations use the dark theme",
+      "schedule": [
+        "GET /api/session#1",
+        "GET /api/recs#1",
+        "GET /api/theme#1"
+      ],
+      "status": "failed",
+      "error": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('#recs li.dark')\nExpected: 2\nReceived: 0\nTimeout:  1500ms",
+      "releaseOrder": [
+        "GET /api/session#1",
+        "GET /api/recs#1",
+        "GET /api/theme#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/theme#1",
+          "url": "http://localhost:4310/api/theme",
+          "sentAt": 193,
+          "arrivedAt": 331,
+          "releasedAt": 541
+        },
+        {
+          "key": "GET /api/session#1",
+          "url": "http://localhost:4310/api/session",
+          "sentAt": 194,
+          "arrivedAt": 331,
+          "releasedAt": 332
+        },
+        {
+          "key": "GET /api/recs#1",
+          "url": "http://localhost:4310/api/recs",
+          "sentAt": 408,
+          "arrivedAt": 471,
+          "releasedAt": 472
+        }
+      ]
+    },
+    "minimalOrder": [
+      "GET /api/session#1",
+      "GET /api/recs#1",
+      "GET /api/theme#1"
+    ],
+    "runsToFailure": 5,
+    "confirm": {
+      "failed": 5,
+      "runs": 5
+    }
+  },
+  {
+    "test": "ok page: cart total (no bug)",
+    "file": "demo/tests/shop.spec.ts",
+    "rules": [],
+    "explored": 1,
+    "totalRuns": 4,
+    "ms": 7357,
+    "verdict": "no-race-found",
+    "baseline": {
+      "index": 0,
+      "title": "ok page: cart total (no bug)",
+      "schedule": null,
+      "status": "passed",
+      "releaseOrder": [
+        "GET /api/user#1",
+        "GET /api/cart#1"
+      ],
+      "events": [
+        {
+          "key": "GET /api/user#1",
+          "url": "http://localhost:4310/api/user",
+          "sentAt": 105,
+          "arrivedAt": 264,
+          "releasedAt": 264
+        },
+        {
+          "key": "GET /api/cart#1",
+          "url": "http://localhost:4310/api/cart",
+          "sentAt": 105,
+          "arrivedAt": 384,
+          "releasedAt": 384
+        }
+      ]
+    }
+  }
+]

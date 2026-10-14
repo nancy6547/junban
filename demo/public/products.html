@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>products</title>
+<ul id="products"></ul>
+<script>
+  // BUG: flags are read once when products render; late flags are ignored.
+  let flags = {};
+  fetch("/api/flags").then(r => r.json()).then(f => { flags = f; });
+  fetch("/api/products").then(r => r.json()).then(d => {
+    document.querySelector("#products").innerHTML = d.products
+      .map(p => `<li>${p}${flags.showSale ? ' <b class="sale">SALE</b>' : ""}</li>`).join("");
+  });
+</script>

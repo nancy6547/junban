@@ -1,0 +1,32 @@
+{
+  "cart shows the total in rupees": {
+    "runs": 17,
+    "failed": true,
+    "ms": 18293
+  },
+  "search shows results for the full query": {
+    "runs": 7,
+    "failed": true,
+    "ms": 8122
+  },
+  "products show the sale badge": {
+    "runs": 5,
+    "failed": true,
+    "ms": 9863
+  },
+  "price shows the live price": {
+    "runs": 50,
+    "failed": true,
+    "ms": 50649
+  },
+  "orders greet the signed-in user": {
+    "runs": 21,
+    "failed": true,
+    "ms": 20815
+  },
+  "recommendations use the dark theme": {
+    "runs": 16,
+    "failed": true,
+    "ms": 16726
+  }
+}

@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>recs</title>
+<ul id="recs"></ul>
+<script>
+  // recs can only be requested after the session (a dependent request).
+  // BUG: recs render with the theme loaded so far.
+  let theme = "light";
+  fetch("/api/theme").then(r => r.json()).then(t => { theme = t.theme; });
+  fetch("/api/session").then(r => r.json()).then(() =>
+    fetch("/api/recs").then(r => r.json()).then(d => {
+      document.querySelector("#recs").innerHTML = d.recs.map(x => `<li class="${theme}">${x}</li>`).join("");
+    })
+  );
+</script>

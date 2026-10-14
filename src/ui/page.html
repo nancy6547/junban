@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Junban report</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23050505'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle' fill='%23f2f2f2' font-family='sans-serif'%3E順%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #070707; --panel: #101010; --panel2: #161616; --edge: #262626; --fg: #f2f2f2; --muted: #a3a3a3; --faint: #5c5c5c;
+  --bad: #ff5d5d; --bad-tint: rgba(255, 93, 93, .14); --good: #7ee2a8; --good-tint: rgba(126, 226, 168, .12);
+  --mono: ui-monospace, "JetBrains Mono", "SF Mono", Consolas, monospace;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --bg: #f6f6f4; --panel: #ffffff; --panel2: #f1f1ef; --edge: #e2e2df; --fg: #121212; --muted: #5a5a5a; --faint: #a0a0a0; --bad: #d62f2f; --bad-tint: rgba(214, 47, 47, .1); --good: #1d8a4f; --good-tint: rgba(29, 138, 79, .1); }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 var(--sans); }
+a { color: inherit; }
+header { display: flex; align-items: center; gap: 18px; padding: 18px 24px; border-bottom: 1px solid var(--edge); flex-wrap: wrap; }
+.logo { display: flex; align-items: baseline; gap: 10px; }
+.logo b { font-size: 20px; letter-spacing: -.02em; }
+.logo span { color: var(--muted); font: 12px var(--mono); }
+.totals { margin-left: auto; display: flex; gap: 22px; font: 12px var(--mono); color: var(--muted); flex-wrap: wrap; }
+.totals strong { color: var(--fg); font-size: 15px; display: block; }
+.layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: calc(100vh - 70px); }
+nav { border-right: 1px solid var(--edge); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+nav button { all: unset; cursor: pointer; display: block; padding: 12px 14px; border-radius: 10px; border: 1px solid transparent; }
+nav button:hover { background: var(--panel); }
+nav button[aria-current="true"] { background: var(--panel); border-color: var(--edge); }
+nav button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+nav .t { display: block; font-size: 14px; }
+nav .v { display: inline-block; margin-top: 6px; font: 11px var(--mono); padding: 2px 8px; border-radius: 999px; }
+.v.race { background: var(--bad-tint); color: var(--bad); }
+.v.none { background: var(--good-tint); color: var(--good); }
+.v.always { background: var(--panel2); color: var(--muted); }
+main { padding: 28px clamp(16px, 4vw, 44px) 60px; min-width: 0; }
+.eyebrow { font: 12px var(--mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+h1 { font-size: clamp(22px, 3vw, 32px); line-height: 1.2; letter-spacing: -.02em; margin: 8px 0 10px; }
+h1 code { font: inherit; font-family: var(--mono); font-size: .85em; padding: 0 6px; border-radius: 6px; background: var(--bad-tint); color: var(--bad); }
+.meta { color: var(--muted); font: 13px var(--mono); display: flex; gap: 18px; flex-wrap: wrap; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 26px; }
+.card { background: var(--panel); border: 1px solid var(--edge); border-radius: 14px; padding: 18px; min-width: 0; }
+.card h2 { font-size: 14px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+.card .sub { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot.pass { background: var(--good); } .dot.fail { background: var(--bad); }
+.wf { display: grid; gap: 8px; }
+.row { display: grid; grid-template-columns: 22px minmax(90px, 160px) minmax(0, 1fr); align-items: center; gap: 10px; font: 12px var(--mono); }
+.row .n { color: var(--muted); text-align: right; }
+.row .k { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row.hot .k { color: var(--bad); font-weight: 600; }
+.track { position: relative; height: 18px; border-radius: 4px; background: var(--panel2); }
+.bar { position: absolute; top: 4px; height: 10px; border-radius: 3px; background: var(--faint); }
+.held { position: absolute; top: 4px; height: 10px; border-radius: 3px; background: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px); opacity: .7; }
+.tick { position: absolute; top: 1px; width: 2px; height: 16px; background: var(--fg); border-radius: 1px; }
+.row.hot .bar { background: var(--bad); }
+.row.hot .tick { background: var(--bad); }
+.axis { display: grid; grid-template-columns: 22px minmax(90px, 160px) minmax(0, 1fr); gap: 10px; font: 11px var(--mono); color: var(--faint); margin-top: 4px; }
+.axis div:last-child { display: flex; justify-content: space-between; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font: 12px var(--mono); margin-top: 14px; }
+.legend i { display: inline-block; width: 18px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.lab { margin-top: 18px; }
+.drag { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.drag li { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--edge); border-radius: 10px; background: var(--panel2); font: 13px var(--mono); cursor: grab; user-select: none; }
+.drag li.dragging { opacity: .4; }
+.drag li.over { border-color: var(--fg); }
+.drag li .grip { color: var(--faint); letter-spacing: -2px; }
+.drag li .mv { display: flex; gap: 4px; }
+.drag li .mv button, .btn { all: unset; cursor: pointer; border: 1px solid var(--edge); border-radius: 8px; padding: 4px 8px; font: 12px var(--mono); color: var(--fg); }
+.drag li .mv button:focus-visible, .btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); padding: 9px 16px; font-weight: 600; }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.actions { display: flex; gap: 10px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+.result { margin-top: 14px; }
+.verdict-pill { display: inline-flex; align-items: center; gap: 8px; font: 600 13px var(--mono); padding: 6px 12px; border-radius: 999px; }
+.verdict-pill.pass { background: var(--good-tint); color: var(--good); }
+.verdict-pill.fail { background: var(--bad-tint); color: var(--bad); }
+pre { margin: 0; white-space: pre-wrap; word-break: break-word; font: 12px/1.5 var(--mono); color: var(--muted); background: var(--panel2); border-radius: 10px; padding: 12px 14px; max-height: 220px; overflow: auto; }
+.note { color: var(--muted); font-size: 13px; }
+.empty { color: var(--muted); padding: 40px 0; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { border-right: 0; border-bottom: 1px solid var(--edge); flex-direction: row; overflow-x: auto; }
+  nav button { min-width: 220px; }
+  .grid2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><b>Junban</b><span>順番 · response-order race finder</span></div>
+  <div class="totals" id="totals"></div>
+</header>
+<div class="layout">
+  <nav id="tests" aria-label="Tests"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<script>
+const DATA = /*__JUNBAN_DATA__*/null;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const short = (k) => { k = k.replace(/^[A-Z]+ /, ""); return k.endsWith("#1") ? k.slice(0, -2) : k; };
+const reports = DATA.reports;
+let current = 0;
+
+function totals() {
+  const races = reports.filter((r) => r.verdict === "race-found").length;
+  const runs = reports.reduce((a, r) => a + r.totalRuns, 0);
+  $("#totals").innerHTML = `<div><strong>${reports.length}</strong>tests hunted</div><div><strong>${races}</strong>races found</div><div><strong>${runs}</strong>test runs used</div>`;
+}
+
+function nav() {
+  $("#tests").innerHTML = reports.map((r, i) => {
+    const v = r.verdict === "race-found" ? ["race", "race found"] : r.verdict === "no-race-found" ? ["none", "no race"] : ["always", "fails anyway"];
+    return `<button data-i="${i}" aria-current="${i === current}"><span class="t">${esc(r.test)}</span><span class="v ${v[0]}">${v[1]}</span></button>`;
+  }).join("");
+  document.querySelectorAll("#tests button").forEach((b) => b.addEventListener("click", () => { current = +b.dataset.i; render(); $("#main").focus(); }));
+}
+
+function waterfall(run, hotKeys) {
+  if (!run) return `<p class="note">No run recorded.</p>`;
+  const evs = run.events.filter((e) => e.releasedAt !== undefined).sort((a, b) => a.releasedAt - b.releasedAt);
+  const max = Math.max(50, ...run.events.map((e) => e.releasedAt ?? e.arrivedAt ?? e.sentAt)) * 1.05;
+  const pct = (t) => `${(t / max) * 100}%`;
+  const rows = evs.map((e, i) => {
+    const hot = hotKeys.has(e.key);
+    const arr = e.arrivedAt ?? e.releasedAt;
+    return `<div class="row${hot ? " hot" : ""}" title="${esc(e.url)}">
+      <div class="n">${i + 1}</div><div class="k">${esc(short(e.key))}</div>
+      <div class="track">
+        <div class="bar" style="left:${pct(e.sentAt)};width:${pct(Math.max(2, arr - e.sentAt))}"></div>
+        ${e.releasedAt > arr + 2 ? `<div class="held" style="left:${pct(arr)};width:${pct(e.releasedAt - arr)}"></div>` : ""}
+        <div class="tick" style="left:calc(${pct(e.releasedAt)} - 1px)"></div>
+      </div></div>`;
+  }).join("");
+  return `<div class="wf">${rows}</div><div class="axis"><div></div><div></div><div><span>0 ms</span><span>${Math.round(max)} ms</span></div></div>`;
+}
+
+function render() {
+  nav();
+  const r = reports[current];
+  const main = $("#main");
+  const hot = new Set(r.rules.flat());
+  if (r.verdict !== "race-found") {
+    main.innerHTML = `<div class="eyebrow">${esc(r.file)}</div><h1>${esc(r.test)}</h1>
+      <p class="meta"><span>${r.verdict === "no-race-found" ? `no failing order in ${r.explored} orders` : "fails even without reordering"}</span><span>${r.totalRuns} runs</span><span>${(r.ms / 1000).toFixed(1)} s</span></p>
+      <div class="grid2"><div class="card"><h2><span class="dot pass"></span>Recorded order</h2><p class="sub">How responses arrived in a normal run.</p>${waterfall(r.baseline || r.failing, new Set())}</div></div>`;
+    return;
+  }
+  const rule = r.rules.map(([a, b]) => `<code>${esc(short(a))}</code> arrives before <code>${esc(short(b))}</code>`).join(" and ");
+  main.innerHTML = `
+    <div class="eyebrow">${esc(r.file)} · ${esc(r.test)}</div>
+    <h1>Fails when ${rule}</h1>
+    <p class="meta"><span>first failure on run ${r.runsToFailure ?? "?"}</span><span>${r.totalRuns} runs incl. shrinking</span><span>${(r.ms / 1000).toFixed(1)} s</span><span>minimal order fails ${r.confirm.failed}/${r.confirm.runs}</span><span>${r.explored} order${r.explored === 1 ? "" : "s"} explored</span></p>
+    <div class="grid2">
+      <div class="card"><h2><span class="dot pass"></span>Passing order</h2><p class="sub">Recorded from a normal run.</p>${waterfall(r.baseline, hot)}</div>
+      <div class="card"><h2><span class="dot fail"></span>Failing order</h2><p class="sub">The smallest change Junban found that breaks the test.</p>${waterfall(r.failing, hot)}</div>
+    </div>
+    <div class="legend"><span><i style="background:var(--faint)"></i>server time</span><span><i style="background:repeating-linear-gradient(135deg,var(--muted) 0 3px,transparent 3px 6px)"></i>held by Junban</span><span><i style="background:var(--fg);width:3px"></i>page sees it</span><span><i style="background:var(--bad)"></i>requests in the rule</span></div>
+    <div class="grid2">
+      <div class="card lab">
+        <h2>Try your own order</h2>
+        <p class="sub">Drag the requests (or use the arrows), then replay the test with exactly that order.</p>
+        <ol class="drag" id="drag"></ol>
+        <div class="actions">
+          <button class="btn primary" id="replay" ${DATA.live ? "" : "disabled"}>Replay this order</button>
+          <button class="btn" id="reset">Reset</button>
+          ${DATA.live ? "" : `<span class="note">Static report. Run <code>npx junban ui</code> to replay.</span>`}
+        </div>
+        <div class="result" id="result" aria-live="polite"></div>
+      </div>
+      <div class="card lab">
+        <h2>Why it failed</h2>
+        <p class="sub">The assertion error from the failing order.</p>
+        <pre>${esc(r.failing && r.failing.error || "(no error message)")}</pre>
+        <p class="note" style="margin-top:14px">A stand-alone repro test was written next to the spec: <code>${esc(r.file.replace(/\.(spec|test)\.(ts|js)$/, ".junban-repro.$1.$2"))}</code>. It only needs <code>@playwright/test</code>.</p>
+      </div>
+    </div>`;
+  setupDrag(r);
+}
+
+function setupDrag(r) {
+  let order = (r.minimalOrder || r.baseline.releaseOrder).slice();
+  const list = $("#drag");
+  const draw = () => {
+    list.innerHTML = order.map((k, i) => `<li draggable="true" data-i="${i}"><span class="grip" aria-hidden="true">⋮⋮</span><span>${esc(short(k))}</span>
+      <span class="mv"><button aria-label="Move ${esc(short(k))} up" data-up="${i}">↑</button><button aria-label="Move ${esc(short(k))} down" data-down="${i}">↓</button></span></li>`).join("");
+    list.querySelectorAll("li").forEach((li) => {
+      li.addEventListener("dragstart", (e) => { li.classList.add("dragging"); e.dataTransfer.setData("text/plain", li.dataset.i); });
+      li.addEventListener("dragend", () => li.classList.remove("dragging"));
+      li.addEventListener("dragover", (e) => { e.preventDefault(); li.classList.add("over"); });
+      li.addEventListener("dragleave", () => li.classList.remove("over"));
+      li.addEventListener("drop", (e) => { e.preventDefault(); const from = +e.dataTransfer.getData("text/plain"), to = +li.dataset.i; const [m] = order.splice(from, 1); order.splice(to, 0, m); draw(); });
+    });
+    list.querySelectorAll("[data-up]").forEach((b) => b.addEventListener("click", () => move(+b.dataset.up, -1)));
+    list.querySelectorAll("[data-down]").forEach((b) => b.addEventListener("click", () => move(+b.dataset.down, 1)));
+  };
+  const move = (i, d) => { const j = i + d; if (j < 0 || j >= order.length) return; [order[i], order[j]] = [order[j], order[i]]; draw(); list.querySelectorAll(d < 0 ? "[data-up]" : "[data-down]")[j]?.focus(); };
+  draw();
+  $("#reset").addEventListener("click", () => { order = (r.minimalOrder || r.baseline.releaseOrder).slice(); draw(); $("#result").innerHTML = ""; });
+  $("#replay").addEventListener("click", async () => {
+    const btn = $("#replay"); btn.disabled = true; btn.textContent = "Running…";
+    $("#result").innerHTML = `<p class="note">Running the test with this order…</p>`;
+    try {
+      const res = await fetch("/api/replay", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ file: r.file, title: r.test, order }) });
+      const j = await res.json();
+      if (j.error) throw new Error(j.error);
+      const ok = j.result.status === "passed";
+      $("#result").innerHTML = `<p><span class="verdict-pill ${ok ? "pass" : "fail"}">${ok ? "PASSED" : "FAILED"}</span> <span class="note">in ${(j.ms / 1000).toFixed(1)} s</span></p>${waterfall(j.result, new Set(r.rules.flat()))}${ok ? "" : `<pre style="margin-top:12px">${esc(j.result.error)}</pre>`}`;
+    } catch (e) {
+      $("#result").innerHTML = `<p class="note">Replay failed: ${esc(e.message)}</p>`;
+    }
+    btn.disabled = false; btn.textContent = "Replay this order";
+  });
+}
+
+totals();
+render();
+</script>
+</body>
+</html>

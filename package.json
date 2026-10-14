@@ -1,0 +1,44 @@
+{
+  "name": "junban",
+  "version": "0.1.0",
+  "description": "Find the network response order that breaks a flaky Playwright test, and get a repro that fails every time.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc && node -e \"require('fs').copyFileSync('src/ui/page.html','dist/ui/page.html')\"",
+    "demo": "tsx demo/server.ts",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "playwright",
+    "flaky-tests",
+    "race-condition",
+    "chrome-devtools-protocol",
+    "testing"
+  ],
+  "author": "Nancy Singh",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "express": "^5.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.4"
+  },
+  "type": "module",
+  "bin": {
+    "junban": "dist/cli.js"
+  },
+  "types": "dist/index.d.ts",
+  "repository": {
+    "url": "https://github.com/nancy6547/junban"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "@playwright/test": ">=1.40"
+  }
+}

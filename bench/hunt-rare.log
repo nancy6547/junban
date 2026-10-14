@@ -1,0 +1,70 @@
+
+● cart shows the total in rupees
+  recording a passing run...
+  baseline order (2 requests): GET /api/user#1  →  GET /api/cart#1
+  trying 1 pair swaps...
+  found a failing order on run 4: GET /api/cart#1  →  GET /api/user#1
+  shrinking 1 flipped pair(s)...
+  minimal rule: GET /api/cart#1 before GET /api/user#1  (fails 5/5)
+  RACE FOUND fails when /api/cart arrives before /api/user
+  first failure on run 4; 9 runs in total incl. shrinking (17.1s); minimal order fails 5/5
+
+● search shows results for the full query
+  recording a passing run...
+  baseline order (2 requests): GET /api/search?q=a#1  →  GET /api/search?q=ab#1
+  trying 1 pair swaps...
+  found a failing order on run 4: GET /api/search?q=ab#1  →  GET /api/search?q=a#1
+  shrinking 1 flipped pair(s)...
+  minimal rule: GET /api/search?q=ab#1 before GET /api/search?q=a#1  (fails 5/5)
+  RACE FOUND fails when /api/search?q=ab arrives before /api/search?q=a
+  first failure on run 4; 9 runs in total incl. shrinking (19.8s); minimal order fails 5/5
+
+● products show the sale badge
+  recording a passing run...
+  baseline order (2 requests): GET /api/flags#1  →  GET /api/products#1
+  trying 1 pair swaps...
+  found a failing order on run 4: GET /api/products#1  →  GET /api/flags#1
+  shrinking 1 flipped pair(s)...
+  minimal rule: GET /api/products#1 before GET /api/flags#1  (fails 5/5)
+  RACE FOUND fails when /api/products arrives before /api/flags
+  first failure on run 4; 9 runs in total incl. shrinking (16.6s); minimal order fails 5/5
+
+● price shows the live price
+  recording a passing run...
+  baseline order (2 requests): GET /api/price#1  →  GET /api/price/live#1
+  trying 1 pair swaps...
+  found a failing order on run 4: GET /api/price/live#1  →  GET /api/price#1
+  shrinking 1 flipped pair(s)...
+  minimal rule: GET /api/price/live#1 before GET /api/price#1  (fails 5/5)
+  RACE FOUND fails when /api/price/live arrives before /api/price
+  first failure on run 4; 9 runs in total incl. shrinking (20.0s); minimal order fails 5/5
+
+● orders greet the signed-in user
+  recording a passing run...
+  baseline order (3 requests): GET /api/profile#1  →  GET /api/session#1  →  GET /api/orders#1
+  trying 3 pair swaps...
+  found a failing order on run 5: GET /api/orders#1  →  GET /api/profile#1  →  GET /api/session#1
+  shrinking 2 flipped pair(s)...
+  minimal rule: GET /api/orders#1 before GET /api/profile#1  (fails 5/5)
+  RACE FOUND fails when /api/orders arrives before /api/profile
+  first failure on run 5; 15 runs in total incl. shrinking (24.6s); minimal order fails 5/5
+
+● recommendations use the dark theme
+  recording a passing run...
+  baseline order (3 requests): GET /api/theme#1  →  GET /api/session#1  →  GET /api/recs#1
+  trying 3 pair swaps...
+  found a failing order on run 5: GET /api/session#1  →  GET /api/recs#1  →  GET /api/theme#1
+  shrinking 2 flipped pair(s)...
+  minimal rule: GET /api/recs#1 before GET /api/theme#1  (fails 5/5)
+  RACE FOUND fails when /api/recs arrives before /api/theme
+  first failure on run 5; 15 runs in total incl. shrinking (25.1s); minimal order fails 5/5
+
+● ok page: cart total (no bug)
+  recording a passing run...
+  baseline order (2 requests): GET /api/user#1  →  GET /api/cart#1
+  trying 1 pair swaps...
+  no failing order in 1 tries
+  no response-order race found in 1 orders (4 runs)
+
+repro test (needs only @playwright/test): demo/tests/shop.junban-repro.spec.ts
+report: junban-report/index.html   (interactive: npx junban ui)

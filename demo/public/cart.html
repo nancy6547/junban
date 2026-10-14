@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>cart</title>
+<p id="total">loading...</p>
+<script>
+  // BUG: renders the total with whatever user is loaded at that moment.
+  let user = null;
+  fetch("/api/user").then(r => r.json()).then(u => { user = u; });
+  fetch("/api/cart").then(r => r.json()).then(c => {
+    const currency = user ? user.currency : "$";
+    document.querySelector("#total").textContent = `${c.items} items, ${currency}${c.total}`;
+  });
+</script>

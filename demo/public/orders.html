@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>orders</title>
+<p id="greeting">loading...</p>
+<script>
+  // BUG: orders render with whatever session/profile are loaded so far.
+  let session = null, profile = null;
+  fetch("/api/session").then(r => r.json()).then(s => { session = s; });
+  fetch("/api/profile").then(r => r.json()).then(p => { profile = p; });
+  fetch("/api/orders").then(r => r.json()).then(o => {
+    const who = session && profile ? profile.name : "guest";
+    document.querySelector("#greeting").textContent = `Hi ${who}, ${o.count} orders`;
+  });
+</script>

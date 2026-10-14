@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>search</title>
+<input id="q" autocomplete="off"><ul id="results"></ul>
+<script>
+  // BUG: no check that the response belongs to the latest query,
+  // so a slow answer for "a" can overwrite the answer for "ab".
+  document.querySelector("#q").addEventListener("input", (e) => {
+    fetch("/api/search?q=" + encodeURIComponent(e.target.value))
+      .then(r => r.json())
+      .then(d => {
+        document.querySelector("#results").innerHTML = d.results.map(x => `<li>${x}</li>`).join("");
+      });
+  });
+</script>

@@ -1,0 +1,18 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx tsc --noEmit -p .
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      # End to end: Junban must find the race in the cart test and nothing in the bug-free one.
+      - run: npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "cart shows the total in rupees"
+      - run: npx tsx src/cli.ts hunt demo/tests/shop.spec.ts -g "ok page: cart total (no bug)"
+      - run: node -e "const r=require('./junban-report/report.json');const v=Object.fromEntries(r.map(x=>[x.test,x.verdict]));if(v['cart shows the total in rupees']!=='race-found'||v['ok page: cart total (no bug)']!=='no-race-found'){console.error(v);process.exit(1)}"

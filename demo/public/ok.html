@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><title>ok</title>
+<p id="total">loading...</p>
+<script>
+  // Correct version of cart.html: waits for both responses.
+  Promise.all([fetch("/api/user").then(r => r.json()), fetch("/api/cart").then(r => r.json())])
+    .then(([u, c]) => { document.querySelector("#total").textContent = `${c.items} items, ${u.currency}${c.total}`; });
+</script>

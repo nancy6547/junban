@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>price</title>
+<p id="price">loading...</p>
+<script>
+  // BUG: last response wins, even if it's the older initial price.
+  const show = d => { document.querySelector("#price").textContent = `₹${d.price}${d.live ? " (live)" : ""}`; };
+  fetch("/api/price").then(r => r.json()).then(show);
+  fetch("/api/price/live").then(r => r.json()).then(show);
+</script>

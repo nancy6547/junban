@@ -7,7 +7,8 @@
     "test": "vitest run",
     "build": "tsc && node -e \"require('fs').copyFileSync('src/ui/page.html','dist/ui/page.html')\"",
     "demo": "tsx demo/server.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [
     "playwright",
@@ -33,12 +34,20 @@
   },
   "types": "dist/index.d.ts",
   "repository": {
-    "url": "https://github.com/nancy6547/junban"
+    "type": "git",
+    "url": "git+https://github.com/nancy6547/junban.git"
   },
   "files": [
     "dist"
   ],
   "peerDependencies": {
     "@playwright/test": ">=1.40"
+  },
+  "homepage": "https://nancy6547.github.io/demos/junban",
+  "bugs": {
+    "url": "https://github.com/nancy6547/junban/issues"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
